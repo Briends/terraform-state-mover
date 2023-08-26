@@ -1,0 +1,37 @@
+-- Instructions on how to write this file are in the Cabal
+-- documentation, which can be found here:
+--   http://haskell.org/cabal/release/cabal-latest/doc/users-guide/
+
+name: terraform-state-mover
+version: 0.0.0.1
+license: MIT
+license-file: LICENSE
+copyright: (c) Briends GmbH
+author: Jan-Philip Loos
+maintainer: Jan-Philip Loos <>
+bug-reports: https://github.com/Briends/terraform-state-mover/issues
+stability: beta
+homepage: https://github.com/Briends/terraform-state-mover
+synopsis: Detect moved terraform resources and perform terraform state mv
+category: Console, Text
+cabal-version: >= 1.6
+build-type: Simple
+
+Description:
+  This tool detects moved terraform resources and performs terraform state mv
+  commands to move the resources in the state.
+
+source-repository head
+  type:     git
+  location: https://github.com/Briends/terraform-state-mover
+
+flag threaded
+  default: False
+
+executable terraform-state-mover
+  hs-source-dirs: src
+  main-is: main.hs
+  build-depends: base >= 4.2 && < 5
+
+  if flag(threaded)
+     ghc-options: -threaded
