@@ -14,7 +14,7 @@ stability: beta
 homepage: https://github.com/Briends/terraform-state-mover
 synopsis: Detect moved terraform resources and perform terraform state mv
 category: Console, Text
-cabal-version: >= 1.6
+cabal-version: >= 1.8
 build-type: Simple
 
 Description:
@@ -31,7 +31,15 @@ flag threaded
 executable terraform-state-mover
   hs-source-dirs: src
   main-is: main.hs
-  build-depends: base >= 4.2 && < 5
+  build-depends: 
+    base >= 4.2 && < 5,
+    aeson >= 2.1.2.1 && < 2.2,
+    ansi-terminal,
+    text,
+    containers,
+    bytestring,
+    directory,
+    process
 
   if flag(threaded)
      ghc-options: -threaded
