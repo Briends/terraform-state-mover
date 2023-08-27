@@ -1,5 +1,4 @@
 {
-  # This is a template created by `hix init`
   inputs.haskellNix.url = "github:input-output-hk/haskell.nix";
   inputs.nixpkgs.follows = "haskellNix/nixpkgs-unstable";
   inputs.flake-parts.url = "github:hercules-ci/flake-parts";
@@ -34,7 +33,7 @@
         };
 
         imports = [
-          ./package.nix
+          ./terraform-state-mover.nix
         ];
       };
     };
