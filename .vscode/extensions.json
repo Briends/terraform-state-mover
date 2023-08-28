@@ -1,0 +1,9 @@
+{
+  "recommendations": [
+    "lunaryorn.hlint",
+    "sjurmillidahl.ormolu-vscode",
+    "haskell.haskell",
+    "mkhl.direnv",
+    "jnoortheen.nix-ide"
+  ]
+}
