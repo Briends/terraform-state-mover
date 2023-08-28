@@ -39,6 +39,7 @@ executable terraform-state-mover
     containers,
     bytestring,
     directory,
+    temporary,
     process
 
   if flag(threaded)
