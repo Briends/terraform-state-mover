@@ -9,6 +9,10 @@
     flake-parts,
   }:
     flake-parts.lib.mkFlake {inherit inputs;} {
+      imports = [
+        # ./nix/docker-bundle.nix
+      ];
+
       systems = [
         "x86_64-linux"
         "x86_64-darwin"
@@ -17,18 +21,15 @@
       ];
 
       perSystem = {
-        config,
-        self',
-        inputs',
-        pkgs,
         system,
+        inputs',
         ...
       }: {
         _module.args = import inputs.nixpkgs {
           inherit system;
-          inherit (haskellNix) config;
+          inherit (inputs.haskellNix) config;
           overlays = [
-            haskellNix.overlay
+            inputs.haskellNix.overlay
           ];
         };
 
