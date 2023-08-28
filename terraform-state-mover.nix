@@ -10,6 +10,7 @@
         cabal = {};
         hlint = {};
         haskell-language-server = {};
+        ormolu = {};
       };
       shell.buildInputs = with pkgs; [
         alejandra
