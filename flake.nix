@@ -9,10 +9,6 @@
     flake-parts,
   }:
     flake-parts.lib.mkFlake {inherit inputs;} {
-      imports = [
-        # ./nix/docker-bundle.nix
-      ];
-
       systems = [
         "x86_64-linux"
         "x86_64-darwin"
@@ -37,6 +33,10 @@
           ./terraform-state-mover.nix
         ];
       };
+
+      imports = [
+        ./nix/docker.nix
+      ];
     };
 
   # --- Flake Local Nix Configuration ----------------------------

@@ -1,4 +1,8 @@
-{pkgs, ...}: let
+{
+  pkgs,
+  self',
+  ...
+}: let
   project =
     pkgs.haskell-nix.project'
     {
@@ -18,7 +22,11 @@
     };
   flake = project.flake {};
 in {
-  apps.default = flake.apps."terraform-state-mover:exe:terraform-state-mover";
-  packages.default = flake.packages."terraform-state-mover:exe:terraform-state-mover";
+  apps.terraform-state-mover = flake.apps."terraform-state-mover:exe:terraform-state-mover";
+  apps.default = self'.apps.terraform-state-mover;
+
+  packages.terraform-state-mover = flake.packages."terraform-state-mover:exe:terraform-state-mover";
+  packages.default = self'.packages.terraform-state-mover;
+
   devShells = flake.devShells;
 }
