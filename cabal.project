@@ -1,0 +1,5 @@
+packages:
+  ./
+
+package terraform-state-mover
+  tests: True

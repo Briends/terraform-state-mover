@@ -1,0 +1,16 @@
+cradle:
+  multi:
+    # - path: "ignore/"
+    #   config: {cradle: {none: }}
+
+    - path: "src"
+      config: {cradle: {cabal: {component: "lib:terraform-state-mover"}}}
+
+    - path: "app"
+      config: {cradle: {cabal: {component: "terraform-state-mover:terraform-state-mover-exe"}}}
+
+    - path: "test"
+      config: {cradle: {cabal: {component: "terraform-state-mover:terraform-state-mover-test"}}}
+
+    - path: "bench"
+      config: {cradle: {cabal: {component: "terraform-state-mover:terraform-state-mover-bench"}}}

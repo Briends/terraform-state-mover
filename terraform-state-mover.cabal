@@ -1,46 +1,82 @@
--- Instructions on how to write this file are in the Cabal
--- documentation, which can be found here:
---   http://haskell.org/cabal/release/cabal-latest/doc/users-guide/
-
-name: terraform-state-mover
-version: 0.0.0.1
-license: MIT
-license-file: LICENSE
-copyright: (c) Briends GmbH
-author: Jan-Philip Loos
-maintainer: Jan-Philip Loos <>
+cabal-version:   2.4
+name:            terraform-state-mover
+version:         0
+license:         MIT
+license-file:    LICENSE
+author:          Jan-Philip Loos
+maintainer:      Jan-Philip Loos <jan-philip@entwicklerteam.hamburg>
+copyright:       2023 Briends GmbH
+tested-with:     GHC ==8.6.5 || ==8.8.3 || ==8.10.7 || ==9.0.2 || ==9.2.8
 bug-reports: https://github.com/Briends/terraform-state-mover/issues
 stability: beta
 homepage: https://github.com/Briends/terraform-state-mover
 synopsis: Detect moved terraform resources and perform terraform state mv
-category: Console, Text
-cabal-version: >= 1.8
-build-type: Simple
-
 Description:
   This tool detects moved terraform resources and performs terraform state mv
   commands to move the resources in the state.
-
+category: Console, Text
+extra-doc-files: CHANGELOG.md README.md LICENSE
 source-repository head
   type:     git
-  location: https://github.com/Briends/terraform-state-mover
+  location: git://github.com/Briends/terraform-state-mover.git
 
-flag threaded
-  default: False
+common common-options
+  build-depends:    base >=4.9 && <5
+  default-language: Haskell2010
+  ghc-options:
+    -Wall -Wcompat -Widentities -Wincomplete-uni-patterns
+    -Wincomplete-record-updates -Wredundant-constraints
+    -fhide-source-paths -Wpartial-fields
 
-executable terraform-state-mover
-  hs-source-dirs: src
-  main-is: main.hs
-  build-depends: 
-    base >= 4.2 && < 5,
-    aeson >= 2.1.2.1 && < 2.2,
-    ansi-terminal,
-    text,
-    containers,
-    bytestring,
-    directory,
-    temporary,
-    process
+library
+  import:          common-options
+  hs-source-dirs:  src
+  exposed-modules: Lib
+  build-depends:
+    , base >= 4.2 && < 5
+    , containers
+    , mtl
+    , aeson
+    , ansi-terminal
+    , text
+    , containers
+    , bytestring
+    , temporary
+    , process
 
-  if flag(threaded)
-     ghc-options: -threaded
+executable terraform-state-mover-exe
+  import:         common-options
+  hs-source-dirs: app
+  main-is:        Main.hs
+  build-depends:  
+    , terraform-state-mover
+    , optparse-applicative
+    , process
+    , directory
+    , containers
+    , aeson
+  ghc-options:    -threaded -rtsopts -with-rtsopts=-N
+
+test-suite terraform-state-mover-test
+  import:         common-options
+  type:           exitcode-stdio-1.0
+  hs-source-dirs: test
+  main-is:        Spec.hs
+  build-depends:
+    , hspec
+    , HUnit
+    , terraform-state-mover
+    , QuickCheck
+
+  ghc-options:    -threaded -rtsopts -with-rtsopts=-N
+
+benchmark terraform-state-mover-bench
+  import:         common-options
+  type:           exitcode-stdio-1.0
+  hs-source-dirs: bench
+  main-is:        Main.hs
+  build-depends:
+    , criterion
+    , terraform-state-mover
+
+  ghc-options:    -threaded -rtsopts -with-rtsopts=-N

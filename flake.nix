@@ -1,51 +1,43 @@
 {
-  inputs.haskellNix.url = "github:input-output-hk/haskell.nix";
-  inputs.nixpkgs.follows = "haskellNix/nixpkgs-unstable";
-  inputs.flake-parts.url = "github:hercules-ci/flake-parts";
-  outputs = inputs @ {
-    self,
-    nixpkgs,
-    haskellNix,
-    flake-parts,
-  }:
-    flake-parts.lib.mkFlake {inherit inputs;} {
-      systems = [
-        "x86_64-linux"
-        "x86_64-darwin"
-        "aarch64-linux"
-        "aarch64-darwin"
-      ];
+  description = "terraform-state-mover";
 
-      perSystem = {
-        system,
-        inputs',
-        ...
-      }: {
-        _module.args = import inputs.nixpkgs {
-          inherit system;
-          inherit (inputs.haskellNix) config;
-          overlays = [
-            inputs.haskellNix.overlay
-          ];
+  inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
+  inputs.flake-utils.url = "github:numtide/flake-utils";
+
+  outputs = inputs: let
+    overlay = final: prev: {
+      haskell =
+        prev.haskell
+        // {
+          packageOverrides = hfinal: hprev:
+            prev.haskell.packageOverrides hfinal hprev
+            // {
+              terraform-state-mover = hfinal.callCabal2nix "terraform-state-mover" ./. {};
+            };
         };
-
-        imports = [
-          ./terraform-state-mover.nix
+      terraform-state-mover = final.haskell.lib.compose.justStaticExecutables final.haskellPackages.terraform-state-mover;
+    };
+    perSystem = system: let
+      pkgs = import inputs.nixpkgs {
+        inherit system;
+        overlays = [overlay];
+      };
+      hspkgs = pkgs.haskellPackages;
+    in {
+      devShells.default = hspkgs.shellFor {
+        withHoogle = true;
+        packages = p: [p.terraform-state-mover];
+        buildInputs = [
+          hspkgs.cabal-install
+          hspkgs.haskell-language-server
+          hspkgs.hlint
+          hspkgs.ormolu
+          pkgs.bashInteractive
+          pkgs.terraform
         ];
       };
-
-      imports = [
-        ./nix/docker.nix
-      ];
+      packages.default = pkgs.terraform-state-mover;
     };
-
-  # --- Flake Local Nix Configuration ----------------------------
-  nixConfig = {
-    # This sets the flake to use the IOG nix cache.
-    # Nix should ask for permission before using it,
-    # but remove it here if you do not want it to.
-    extra-substituters = ["https://cache.iog.io"];
-    extra-trusted-public-keys = ["hydra.iohk.io:f/Ea+s+dFdN+3Y/G+FDgSq+a5NEWhJGzdjvKNGv0/EQ="];
-    allow-import-from-derivation = true;
-  };
+  in
+    {overlays.default = overlay;} // inputs.flake-utils.lib.eachDefaultSystem perSystem;
 }
