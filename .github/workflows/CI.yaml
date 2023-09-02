@@ -17,7 +17,7 @@ jobs:
       - name: Build terraform-state-mover
         run: nix build -L
       - name: Build terraform-state-mover shell
-        run: nix build -L '.#devShell.x86_64-linux'
+        run: nix build -L '.#devShells.x86_64-linux.default'
 
   stack-build:
     name: Stack ${{ matrix.resolver }} on ${{ matrix.os }}
