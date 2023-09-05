@@ -55,10 +55,7 @@
           ];
         };
         packages.default = pkgs.terraform-state-mover;
-
-        apps.default = {
-          program = pkgs.terraform-state-mover;
-        };
+        apps.default.program = pkgs.terraform-state-mover;
       };
 
       flake = {
