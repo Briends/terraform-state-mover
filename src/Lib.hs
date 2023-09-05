@@ -10,16 +10,14 @@ module Lib
     backupTerraformState,
     generateAndParsePlan,
     moveState,
-    warnColor,
-    withColor,
   )
 where
 
+import ConsoleColors (addColor, deleteColor, withColor)
 import Data.Aeson
 import qualified Data.Aeson.KeyMap as KeyMap
 import qualified Data.ByteString.Lazy.Char8 as BL
 import Data.Map hiding (map, null)
-import System.Console.ANSI
 import System.IO.Temp
 import System.Process
 
@@ -97,20 +95,3 @@ moveState oldResourceName newResourceName =
   callCommand ("terraform state mv " <> singlequoted oldResourceName <> (" " <> singlequoted newResourceName))
   where
     singlequoted str = "'" <> str <> "'"
-
--- Utility for printing colors
-
-deleteColor :: [SGR]
-deleteColor = [SetColor Foreground Vivid Red]
-
-addColor :: [SGR]
-addColor = [SetColor Foreground Vivid Green]
-
-warnColor :: [SGR]
-warnColor = [SetColor Foreground Vivid Yellow]
-
-withColor :: [SGR] -> IO () -> IO ()
-withColor color action = do
-  setSGR color
-  action
-  setSGR [Reset]

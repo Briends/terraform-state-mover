@@ -1,5 +1,6 @@
 module Main (main) where
 
+import ConsoleColors (warnColor, withColor)
 import Control.Monad
 import Data.List ((\\))
 import Data.Map hiding (map, null, (\\))

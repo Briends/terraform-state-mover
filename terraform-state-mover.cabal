@@ -31,7 +31,7 @@ common common-options
 library
   import:          common-options
   hs-source-dirs:  src
-  exposed-modules: Lib
+  exposed-modules: Lib, ConsoleColors
   build-depends:
     , base >= 4.2 && < 5
     , containers
