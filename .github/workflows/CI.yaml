@@ -10,7 +10,7 @@ jobs:
     name: Nix build
     runs-on: ubuntu-beta
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - uses: cachix/install-nix-action@v16
       - name: Build dependencies
         run: nix develop --command ghc --version
@@ -28,7 +28,7 @@ jobs:
         os: [ ubuntu-beta, macos-latest ]
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - uses: haskell/actions/setup@v1
         with:
           enable-stack: true
@@ -48,7 +48,7 @@ jobs:
         os: [ ubuntu-beta, macos-latest ]
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - uses: haskell/actions/setup@v1
         with:
           ghc-version: ${{ matrix.ghc }}
