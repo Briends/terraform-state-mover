@@ -34,22 +34,22 @@
         pkgs,
         system,
         ...
-      }: let
-        hspkgs = pkgs.haskellPackages;
-      in {
+      }: {
         _module.args.pkgs = import nixpkgs {
           inherit system;
-          overlays = [overlay];
+          overlays = [
+            overlay
+          ];
         };
 
-        devShells.default = hspkgs.shellFor {
+        devShells.default = pkgs.haskellPackages.shellFor {
           withHoogle = true;
           packages = p: [p.terraform-state-mover];
           buildInputs = [
-            hspkgs.cabal-install
-            hspkgs.haskell-language-server
-            hspkgs.hlint
-            hspkgs.ormolu
+            pkgs.haskellPackages.cabal-install
+            pkgs.haskellPackages.haskell-language-server
+            pkgs.haskellPackages.hlint
+            pkgs.haskellPackages.ormolu
             pkgs.bashInteractive
             pkgs.terraform
           ];
@@ -59,8 +59,6 @@
         apps.default = {
           program = pkgs.terraform-state-mover;
         };
-
-        overlays.default = overlay;
       };
 
       flake = {
