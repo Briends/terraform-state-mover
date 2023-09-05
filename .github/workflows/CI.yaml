@@ -24,7 +24,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        resolver: [ nightly, lts-21, lts-20 ]
+        resolver: [ nightly, lts-21]
         os: [ ubuntu-beta, macos-latest ]
     runs-on: ${{ matrix.os }}
     steps:
